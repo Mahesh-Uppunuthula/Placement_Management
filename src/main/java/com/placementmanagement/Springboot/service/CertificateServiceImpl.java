@@ -52,7 +52,7 @@ public class CertificateServiceImpl implements CertificateServices {
 
 		// TODO handle the IllegalArgumentException
 		certificateRepo.deleteById(id);
-		ApiResponseBuilder<Certificate> builderObj = new ApiResponseBuilder<Certificate>(Optional.of(new Certificate(-1, "",-1)),
+		ApiResponseBuilder<Certificate> builderObj = new ApiResponseBuilder<Certificate>(Optional.of(new Certificate(-1, "no content to show",-1)),
 				"certificate deleted successfully " + id, "error occured while deleting");
 		return builderObj.getResponseInstance();
 	}
