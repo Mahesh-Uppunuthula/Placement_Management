@@ -51,9 +51,19 @@ public class CertificateServiceImpl implements CertificateServices {
 	public ApiResponse deleteCertificate(int id) {
 
 		// TODO handle the IllegalArgumentException
-		certificateRepo.deleteById(id);
-		ApiResponseBuilder<Certificate> builderObj = new ApiResponseBuilder<Certificate>(Optional.of(new Certificate(-1, "no content to show",-1)),
-				"certificate deleted successfully " + id, "error occured while deleting");
+
+		// check if the certificate with the 'id' exists
+
+		ApiResponseBuilder<Certificate> builderObj;
+		Optional<Certificate> objFromDb = certificateRepo.findById(id);
+		if (objFromDb.isEmpty()) {
+			builderObj = new ApiResponseBuilder<Certificate>(Optional.of(new Certificate(-1, "no content to show", -1)),
+					"certificate with id \'" + id + "\' does not exist", "error occured while deleting");
+		} else {
+			certificateRepo.deleteById(id);
+			builderObj = new ApiResponseBuilder<Certificate>(Optional.of(new Certificate(-1, "no content to show", -1)),
+					"certificate deleted successfully " + id, "error occured while deleting");
+		}
 		return builderObj.getResponseInstance();
 	}
 
@@ -71,7 +81,7 @@ public class CertificateServiceImpl implements CertificateServices {
 			certificateFromDb.get().setYear(certificate.getYear());
 
 			Optional<Certificate> updatedCertificate = Optional.of(certificateRepo.save(certificateFromDb.get()));
-			
+
 			ApiResponseBuilder<Certificate> builderObj = new ApiResponseBuilder<Certificate>(updatedCertificate,
 					"certificate updated successfully", "error occured while updating certificate");
 			System.out.println("builder obj " + builderObj.toString());
